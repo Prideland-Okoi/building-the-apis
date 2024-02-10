@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% block title %}Create Member{% endblock %} {% block
+content %}
+<div class="container mt-4">
+  <h2>Create Member</h2>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+      {{ form.full_name.label(class="form-control-label") }} {{
+      form.full_name(class="form-control") }} {% for error in
+      form.full_name.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.department.label(class="form-control-label") }} {{
+      form.department(class="form-control") }} {% for error in
+      form.department.errors %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <div class="form-group">
+      {{ form.company.label(class="form-control-label") }} {{
+      form.company(class="form-control") }} {% for error in form.company.errors
+      %}
+      <span class="text-danger">{{ error }}</span>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<br />
+{% endblock %}
