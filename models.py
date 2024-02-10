@@ -1,4 +1,6 @@
-# models.py
+"""
+Module for defining database models.
+"""
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -6,6 +8,9 @@ db = SQLAlchemy()
 
 
 class Member(db.Model):
+    """
+    Model class for members.
+    """
     __tablename__ = 'members'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +27,9 @@ class Member(db.Model):
 
 
 class Contribution(db.Model):
+    """
+    Model class for contributions.
+    """
     __tablename__ = 'contributions'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -38,6 +46,9 @@ class Contribution(db.Model):
 
 
 class Expenses(db.Model):
+    """
+    Model class for expenses.
+    """
     __tablename__ = 'expenses'
 
     id = db.Column(db.Integer, primary_key=True)
