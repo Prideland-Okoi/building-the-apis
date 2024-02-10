@@ -1,62 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            margin: 20px;
-        }
+{% extends "base.html" %} {% block title %}{{title}}{% endblock %} {% block
+content %}
+<h1>{{ member.full_name }} Contribution Details</h1>
 
-        #individual-details-card {
-            margin-bottom: 20px;
-        }
-    </style>
-    <title>Individual Details</title>
-</head>
-<body>
+<h3>Member Information</h3>
+<p><strong>Name:</strong> {{ member.full_name }}</p>
+<p><strong>Department:</strong> {{ member.department }}</p>
+<p><strong>Company:</strong> {{ member.company }}</p>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card" id="individual-details-card">
-                <div class="card-header">
-                    <h5 class="card-title">Individual Details</h5>
-                </div>
-                <div class="card-body">
-                    <div>
-                        <h6>Full Name: {{ full_name }}</h6>
-                        <p>Department: {{ department }}</p>
-                        <p>Company: {{ company }}</p>
-                    </div>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Month</th>
-                            <th>Contribution</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for month, contribution in contributions.items() %}
-                            <tr>
-                                <td>{{ month }}</td>
-                                <td>{{ contribution }}</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                    <p>Total Contribution: {{ total_contribution }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<h4>Contributions</h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Month</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for contribution in contributions %}
+    <tr>
+      <td>{{ contribution.month }}</td>
+      <td>${{ contribution.amount }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-</body>
-</html>
-
+<p><strong>Total Contribution:</strong> ${{ total_contribution }}</p>
+{% endblock content %}
