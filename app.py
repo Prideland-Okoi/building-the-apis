@@ -1,7 +1,12 @@
 from flask import Flask, render_template
-from models import Member, Contribution, Expenses
+from sqlalchemy import func
+from sqlalchemy.orm import sessionmaker
+from models import Member, Contribution, Expenses, engine
 
 app = Flask(__name__)
+
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def calculate_total_contribution(member):
     return sum([contribution.amount for contribution in member.contributions])
@@ -27,7 +32,8 @@ balance = total_contribution - total_goods_expenses
 
 @app.route('/')
 def summary():
-    return render_template('summary.html', contributions=contributions, goods_expenses=goods_expenses, total_contribution=total_contribution, total_goods_expenses=total_goods_expenses, balance=balance)
+    # Adjust this according to your needs, as contributions and goods_expenses are not defined in your code
+    return render_template('summary.html', total_contribution=total_contribution, total_goods_expenses=total_goods_expenses, balance=balance)
 
 @app.route('/individual/<member_name>')
 def individual(member_name):
@@ -39,5 +45,6 @@ def individual(member_name):
                                total_contribution=member.total_contribution)
     else:
         return "Member not found"
+
 if __name__ == '__main__':
     app.run(debug=True)
