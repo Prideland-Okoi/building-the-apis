@@ -3,6 +3,10 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+
+DATABASE_URI = 'coop_db'
+engine = create_engine(DATABASE_URI)
 
 Base = declarative_base()
 
