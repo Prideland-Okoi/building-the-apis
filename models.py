@@ -25,6 +25,9 @@ class Member(db.Model):
         self.department = department
         self.company = company
 
+    def __repr__(self):
+        return f"<Member(id={self.id}, name='{self.full_name}')>"
+
 
 class Contribution(db.Model):
     """
