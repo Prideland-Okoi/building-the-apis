@@ -1,5 +1,8 @@
+"""
+Flask application for managing contributions and expenses.
+"""
 from flask import Flask, render_template, flash
-from flask import redirect, url_for, request, current_app
+from flask import redirect, url_for, current_app
 from flask_bootstrap import Bootstrap
 from sqlalchemy import func
 from models import db, Member, Contribution, Expenses
@@ -22,6 +25,9 @@ bootstrap = Bootstrap(app)
 
 @app.context_processor
 def inject_data():
+    """
+    Injects data into the context for all templates.
+    """
     try:
         total_contribution = (
             db.session.query(func.sum(Contribution.amount)).scalar() or 0
@@ -41,6 +47,9 @@ def inject_data():
 
 @app.route("/")
 def summary():
+    """
+    Summary page with total contributions, expenses, and member details.
+    """
     members = Member.query.all()
 
     # Calculate total contribution for each member
@@ -69,6 +78,9 @@ def summary():
 
 @app.route("/contribution_details/<member_id>", methods=["GET"])
 def contribution_details(member_id):
+    """
+    Renders the contribution details page for a specific member.
+    """
     member = Member.query.get_or_404(member_id)
     if member:
         contributions = member.contributions
@@ -89,6 +101,9 @@ def contribution_details(member_id):
 
 @app.route("/create_member", methods=["GET", "POST"])
 def create_member():
+    """
+    Renders the create member form and handles form submission.
+    """
     form = MemberForm()
     if form.validate_on_submit():
         full_name = form.full_name.data
@@ -121,6 +136,9 @@ def create_member():
 
 @app.route("/create_expense", methods=["GET", "POST"])
 def create_expense():
+    """
+    Renders the create expense form and handles form submission.
+    """
     form = ExpenseForm()
     if form.validate_on_submit():
         item = form.item.data
@@ -146,6 +164,9 @@ def create_expense():
 
 @app.route("/create_contribution", methods=["GET", "POST"])
 def create_contribution():
+    """
+    Renders the create contribution form and handles form submission.
+    """
     form = ContributionForm()
     form.member_id.choices = [
         (member.id, member.full_name) for member in Member.query.all()
