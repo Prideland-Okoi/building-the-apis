@@ -5,6 +5,7 @@ from flask import Flask, render_template, flash
 from flask import redirect, url_for, current_app
 from flask_bootstrap import Bootstrap
 from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
 from models import db, Member, Contribution, Expenses
 from forms import MemberForm, ContributionForm, ExpenseForm
 
@@ -114,22 +115,23 @@ def create_member():
         existing_member = Member.query.filter_by(full_name=full_name).first()
         if existing_member:
             flash("A member with the same name already exists.", "danger")
-        else:
-            new_member = Member(
-                full_name=full_name, department=department, company=company
+            return redirect(url_for("create_member"))
+
+        new_member = Member(
+            full_name=full_name, department=department, company=company
+        )
+        try:
+            db.session.add(new_member)
+            db.session.commit()
+            flash("Member added successfully!", "success")
+            return redirect(url_for("summary"))
+        except SQLAlchemyError as e:
+            flash(
+                "An error occurred while adding the member.",
+                "danger",
             )
-            try:
-                db.session.add(new_member)
-                db.session.commit()
-                flash("Member added successfully!", "success")
-                return redirect(url_for("summary"))
-            except Exception as e:
-                flash(
-                    "An error occurred while adding the member.",
-                    "danger",
-                )
-                db.session.rollback()
-                current_app.logger.error(f"Error adding expense: {e}")
+            db.session.rollback()
+            current_app.logger.error(f"Error adding expense: {e}")
 
     return render_template("create_member.html", form=form)
 
@@ -151,7 +153,7 @@ def create_expense():
             db.session.commit()
             flash("Expense added successfully!", "success")
             return redirect(url_for("summary"))
-        except Exception as e:
+        except SQLAlchemyError as e:
             flash(
                 "An error occurred while adding the expense.",
                 "danger",
@@ -186,7 +188,7 @@ def create_contribution():
             db.session.commit()
             flash("Contribution added successfully!", "success")
             return redirect(url_for("summary"))
-        except Exception as e:
+        except SQLAlchemyError as e:
             flash(
                 "An error occurred while adding the contribution.",
                 "danger",
