@@ -25,6 +25,10 @@ class Member(db.Model):
         self.department = department
         self.company = company
 
+    # noqa: Too few public methods
+    def some_method(self):
+        pass
+
     def __repr__(self):
         return f"<Member(id={self.id}, name='{self.full_name}')>"
 
