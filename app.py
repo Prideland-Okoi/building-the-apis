@@ -37,7 +37,7 @@ def inject_data():
             db.session.query(func.sum(Expenses.cost)).scalar() or 0
         )
         wallet = total_contribution - total_expenses
-    except Exception as e:
+    except SQLAlchemyError as e:
         current_app.logger.error(
             f"Error retrieving data for context processor: {e}"
         )
@@ -83,21 +83,21 @@ def contribution_details(member_id):
     Renders the contribution details page for a specific member.
     """
     member = Member.query.get_or_404(member_id)
-    if member:
-        contributions = member.contributions
-        total_contribution = sum(
-            contribution.amount for contribution in contributions
-        )
-        return render_template(
-            "individual.html",
-            title="Individual Details",
-            member=member,
-            contributions=contributions,
-            total_contribution=total_contribution,
-        )
-    else:
-        # Handle case where member with provided ID is not found
-        return "Member not found", 404
+    if not member:
+        flash("Member not found.", "danger")
+        return redirect(url_for("summary"))
+
+    contributions = member.contributions
+    total_contribution = sum(
+        contribution.amount for contribution in contributions
+    )
+    return render_template(
+        "individual.html",
+        title="Individual Details",
+        member=member,
+        contributions=contributions,
+        total_contribution=total_contribution,
+    )
 
 
 @app.route("/create_member", methods=["GET", "POST"])
